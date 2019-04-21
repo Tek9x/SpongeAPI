@@ -24,6 +24,8 @@
  */
 package org.spongepowered.api.item.inventory.custom;
 
+import org.spongepowered.api.entity.living.Villager;
+import org.spongepowered.api.entity.living.animal.Horse;
 import org.spongepowered.api.util.generator.dummy.DummyObjectProvider;
 
 /**
@@ -31,14 +33,16 @@ import org.spongepowered.api.util.generator.dummy.DummyObjectProvider;
  */
 public final class ContainerTypes {
 
+    // Containers backed by an inventory.
+
     // SORTFIELDS:ON
 
     /**
-     * Size 27 (3x9)
+     * Size 27 (3x9 grid)
      */
     public static final ContainerType CHEST_3X9 = DummyObjectProvider.createFor(ContainerType.class, "chest_3x9"); // "minecraft:chest"
     /**
-     * Size 54 (6x9)
+     * Size 54 (6x9 grid)
      */
     public static final ContainerType CHEST_6x9 = DummyObjectProvider.createFor(ContainerType.class, "chest_6x9"); // "minecraft:chest"
     /**
@@ -46,47 +50,65 @@ public final class ContainerTypes {
      */
     public static final ContainerType FURNACE = DummyObjectProvider.createFor(ContainerType.class, "furnace"); // "minecraft:furnace"
     /**
-     * Size 9 (3x3).
+     * Size 9 (3x3 grid).
      */
     public static final ContainerType DISPENSER = DummyObjectProvider.createFor(ContainerType.class, "dispenser"); // "minecraft:dispenser"
-    /**
-     * Size 10 (3x3+1).
-     */
-    public static final ContainerType CRAFTING_TABLE = DummyObjectProvider.createFor(ContainerType.class, "crafting_table"); // "minecraft:crafting_table"
     /**
      * Size 5.
      */
     public static final ContainerType BREWING_STAND = DummyObjectProvider.createFor(ContainerType.class, "brewing_stand"); // "minecraft:brewing_stand"
     /**
-     * Size 5 (1x5).
+     * Size 5 (1x5 grid).
      */
     public static final ContainerType HOPPER = DummyObjectProvider.createFor(ContainerType.class, "hopper"); // "minecraft:hopper"
+
     /**
-     * Size 1.
-     */
-    public static final ContainerType BEACON = DummyObjectProvider.createFor(ContainerType.class, "beacon"); // "minecraft:beacon"
-    /**
-     * Size 2.
-     */
-    public static final ContainerType ENCHANTING_TABLE = DummyObjectProvider.createFor(ContainerType.class, "enchanting_table"); // "minecraft:enchanting_table"
-    /**
-     * Size 3.
-     */
-    public static final ContainerType ANVIL = DummyObjectProvider.createFor(ContainerType.class, "anvil"); // "minecraft:anvil"
-    /**
-     * Size 3.
-     */
-    public static final ContainerType VILLAGER = DummyObjectProvider.createFor(ContainerType.class, "villager"); // "minecraft:villager"
-    /**
-     * Sizes 2 and more depending on the Horse Carrier.
-     */
-    public static final ContainerType HORSE = DummyObjectProvider.createFor(ContainerType.class, "horse"); // "minecraft:horse" internally "EntityHorse"
-    /**
-     * Size 27 (3x9). Shulker boxes are not allowed in shulker boxes.
+     * Size 27 (3x9 grid). Shulker boxes are not allowed in shulker boxes.
      */
     public static final ContainerType SHULKER_BOX = DummyObjectProvider.createFor(ContainerType.class, "shulker_box"); // "minecraft:shulker_box"
 
     // SORTFIELDS:OFF
+
+    // Containers with internal Inventory.
+
+    // SORTFIELDS:ON
+
+    /**
+     * Size 0. All slots present in the container only: 10 (3x3+1).
+     */
+    public static final ContainerType CRAFTING_TABLE = DummyObjectProvider.createFor(ContainerType.class, "crafting_table"); // "minecraft:crafting_table"
+    /**
+     * Size 0. All slots present in the container only 2.
+     */
+    public static final ContainerType ENCHANTING_TABLE = DummyObjectProvider.createFor(ContainerType.class, "enchanting_table"); // "minecraft:enchanting_table"
+    /**
+     * Size 0. All slots present in the container only: 3.
+     */
+    public static final ContainerType ANVIL = DummyObjectProvider.createFor(ContainerType.class, "anvil"); // "minecraft:anvil"
+
+    /**
+     * Size 0. All slots present in the container only: 1.
+     */
+    public static final ContainerType BEACON = DummyObjectProvider.createFor(ContainerType.class, "beacon"); // "minecraft:beacon"
+
+    // SORTFIELDS:OFF
+
+    // Containers that cannot be opened on their own. Create an Entity to open the container instead.
+
+    // SORTFIELDS:ON
+
+    /**
+     * Create a subtype of a {@link Horse} Entity instead of using this ContainerType.
+     */
+    public static final ContainerType HORSE = DummyObjectProvider.createFor(ContainerType.class, "horse"); // "minecraft:horse" internally "EntityHorse"
+
+    /**
+     * Create a {@link Villager} Entity instead of using this ContainerType.
+     */
+    public static final ContainerType VILLAGER = DummyObjectProvider.createFor(ContainerType.class, "villager"); // "minecraft:villager"
+
+    // SORTFIELDS:OFF
+
 }
 
 

@@ -36,7 +36,6 @@ import org.spongepowered.api.item.inventory.slot.SlotIndex;
 import org.spongepowered.api.item.inventory.transaction.InventoryTransactionResult;
 import org.spongepowered.api.item.inventory.type.ViewableInventory;
 import org.spongepowered.api.plugin.PluginContainer;
-import org.spongepowered.api.util.CopyableBuilder;
 import org.spongepowered.api.util.ResettableBuilder;
 
 import java.util.List;

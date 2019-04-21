@@ -108,6 +108,17 @@ public interface ViewableInventory extends Inventory {
         BuildingStep type(ContainerType type);
 
         /**
+         * Specifies the type of inventory you want to build based on an existing Inventory
+         *
+         * @param inventory the viewable inventory
+         *
+         * @return The building step
+         */
+        default BuildingStep typeFrom(ViewableInventory inventory) {
+            return this.type(inventory.getType());
+        }
+
+        /**
          * The building step. Define all slots needed for the chosen {@link ContainerType}.
          * <p>When done use {@link #completeStructure()} to finalize the inventory.</p>
          */

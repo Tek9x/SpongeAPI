@@ -25,9 +25,12 @@
 package org.spongepowered.api.item.inventory.custom;
 
 import org.spongepowered.api.CatalogType;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.Container;
 import org.spongepowered.api.item.inventory.type.ViewableInventory;
 import org.spongepowered.api.util.annotation.CatalogedBy;
+
+import java.util.Optional;
 
 /**
  * ContainerTypes are used when building a custom {@link ViewableInventory}.
