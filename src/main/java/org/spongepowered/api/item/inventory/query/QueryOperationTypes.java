@@ -95,6 +95,8 @@ public final class QueryOperationTypes {
      */
     public static final QueryOperationType<Class<?>> TYPE = DummyObjectProvider.createExtendedFor(QueryOperationType.class, "TYPE");
 
+    // TODO query for grid inside a grid.
+
     // SORTFIELDS:OFF
 
     // Suppress default constructor to ensure non-instantiability.

@@ -25,7 +25,6 @@
 package org.spongepowered.api.item.inventory.type;
 
 import com.flowpowered.math.vector.Vector2i;
-import com.sun.javafx.geom.Vec2d;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.property.Property;
 import org.spongepowered.api.entity.living.player.Player;
@@ -34,9 +33,8 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.InventoryProperties;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.item.inventory.Slot;
-import org.spongepowered.api.item.inventory.menu.InventoryMenu;
 import org.spongepowered.api.item.inventory.custom.ContainerType;
-import org.spongepowered.api.item.inventory.slot.SlotIndex;
+import org.spongepowered.api.item.inventory.menu.InventoryMenu;
 import org.spongepowered.api.util.ResettableBuilder;
 
 import java.util.List;
@@ -91,14 +89,14 @@ public interface ViewableInventory extends Inventory {
      *
      * @return The builder
      */
-    static ViewableInventory.Builder builder() {
-        return Sponge.getRegistry().createBuilder(ViewableInventory.Builder.class);
+    static Builder builder() {
+        return Sponge.getRegistry().createBuilder(Builder.class);
     }
 
     /**
      * A builder for inventories conforming to a ContainerType
      */
-    interface Builder extends ResettableBuilder<Inventory, ViewableInventory.Builder> {
+    interface Builder extends ResettableBuilder<Inventory, Builder> {
 
         /**
          * Specifies the type of inventory you want to build.
@@ -110,62 +108,120 @@ public interface ViewableInventory extends Inventory {
         BuildingStep type(ContainerType type);
 
         /**
-         * Builds a wrapper around an existing ViewableInventory.
-         *
-         * @param inventory the existing ViewableInventory.
-         * @return The end step.
-         */
-        EndStep ofViewable(ViewableInventory inventory);
-
-        /**
          * The building step. Define all slots needed for the chosen {@link ContainerType}.
          * <p>When done use {@link #completeStructure()} to finalize the inventory.</p>
          */
         interface BuildingStep {
 
-            // New Proposal:
-            // would need a way to query for arbitrary grids in an inventory
+            /**
+             * Adds dummy-slots to the inventory.
+             *
+             * @param count the amount of slots to add
+             * @param offset the offset for adding the slots
+             *
+             * @return the dummy building step
+             */
+            DummyStep dummySlots(int count, int offset);
 
-            // dummy slots
-            BuildingStep dummySlots(int count); // no offset
-            BuildingStep dummySlots(int count, int offset);
-            BuildingStep dummySlots(int count, Vector2i offset);
-            // dummy slots with default item
-            BuildingStep dummySlots(int count, ItemStackSnapshot item); // no offset
-            BuildingStep dummySlots(int count, int offset, ItemStackSnapshot item);
-            BuildingStep dummySlots(int count, Vector2i offset, ItemStackSnapshot item);
-            // dummy grid
-            BuildingStep dummyGrid(Vector2i size); // no offset
-            BuildingStep dummyGrid(Vector2i size, int offset);
-            BuildingStep dummyGrid(Vector2i size, Vector2i offset);
-            // dummy grid with default item
-            BuildingStep dummyGrid(Vector2i size, ItemStackSnapshot item); // no offset
-            BuildingStep dummyGrid(Vector2i size, int offset, ItemStackSnapshot item);
-            BuildingStep dummyGrid(Vector2i size, Vector2i offset, ItemStackSnapshot item);
-            // slots sourced from list
-            BuildingStep slots(List<Slot>source); // no offset
+            /**
+             * Adds dummy-slots to the inventory.
+             *
+             * @param count the amount of slots to add
+             * @param offset the offset for adding the slots
+             *
+             * @return the dummy building step
+             */
+            DummyStep dummySlots(int count, Vector2i offset);
+
+            /**
+             * Adds a grid of dummy-slots to the inventory.
+             *
+             * @param size the size of the grid
+             * @param offset the offset for adding the slots
+             *
+             * @return the dummy building step
+             */
+            DummyStep dummyGrid(Vector2i size, int offset);
+
+            /**
+             * Adds a grid of dummy-slots to the inventory.
+             *
+             * @param size the size of the grid
+             * @param offset the offset for adding the slots
+             *
+             * @return the dummy building step
+             */
+            DummyStep dummyGrid(Vector2i size, Vector2i offset);
+
+            /**
+             * Adds given slots to the inventory.
+             *
+             * @param source the source slots.
+             * @param offset the offset for adding the slots
+             *
+             * @return the building step
+             */
             BuildingStep slots(List<Slot> source, int offset);
+
+            /**
+             * Adds given slots to the inventory.
+             *
+             * @param source the source slots.
+             * @param offset the offset for adding the slots
+             *
+             * @return the building step
+             */
             BuildingStep slots(List<Slot> source, Vector2i offset);
-            // source must be size.x*size.y slots
-            BuildingStep grid(Vector2i size, List<Slot>source); // no offset
-            BuildingStep grid(Vector2i size, int offset, List<Slot>source);
-            BuildingStep grid(Vector2i size, Vector2i offset, List<Slot>source);
+
+            /**
+             * Adds given slots to the inventory in a grid.
+             *
+             * @param source the source slots.
+             * @param size the size if the grid
+             * @param offset the offset for adding the slots.
+             *
+             * @return the building step
+             */
+            BuildingStep grid(List<Slot> source, Vector2i size, int offset);
+
+            /**
+             * Adds given slots to the inventory in a grid.
+             *
+             * @param source the source slots.
+             * @param size the size if the grid
+             * @param offset the offset for adding the slots.
+             *
+             * @return the building step
+             */
+            BuildingStep grid(List<Slot> source, Vector2i size, Vector2i offset);
             // provide target slot index/position
-            BuildingStep slotsAtIndizes(List<Slot>source, List<SlotIndex> at);
+
+            /**
+             * Adds given slots to the inventory at given indizes.
+             *
+             * @param source the source slots
+             * @param at the indizes
+             *
+             * @return the building step
+             */
+            BuildingStep slotsAtIndizes(List<Slot>source, List<Integer> at);
+
+            /**
+             * Adds given slots to the inventory at given positions
+             *
+             * @param source the source slots
+             * @param at the indizes
+             *
+             * @return the building step
+             */
             BuildingStep slotsAtPositions(List<Slot>source, List<Vector2i> at);
-
-            // fillDummy no args stays
-            BuildingStep fillDummy(ItemStackSnapshot item);
-            // completeStructure stays
-
-            //Previous stuff below
 
             /**
              * Adds all undefined slots as dummy slots.
              *
              * @return the building step.
              */
-            BuildingStep fillDummy();
+            DummyStep fillDummy();
 
             /**
              * Completes the inventory structure.
@@ -175,187 +231,21 @@ public interface ViewableInventory extends Inventory {
              * @return the end step
              */
             EndStep completeStructure();
-
-
-            /**
-             * Sets the source inventory for the following calls.
-             * @param inventory the next source inventory
-             *
-             * @return the source step
-             */
-            SourceStep source(Inventory inventory);
-
-            /**
-             * Sets the source inventory to a dummy source.
-             * <p>Sponge will generate single slot inventories for every slot.</p>
-             *
-             * @return the dummy source step
-             */
-            SourceStep dummySource();
-
-            /**
-             * Sets the source inventory to a dummy source.
-             * <p>Sponge will generate single slot inventories filled with given item for every slot.</p>
-             *
-             * @return the dummy source step
-             */
-            SourceStep dummySource(ItemStackSnapshot item);
         }
 
-
-        /**
-         * The source step.
-         * <p>The source Inventory has been set. Methods on this interface reference the last source set.</p>
-         * <p>If a dummy source was set slots will be generated with the defined {@link ItemStackSnapshot}</p>
-         */
-        interface SourceStep extends BuildingStep {
+        interface DummyStep extends BuildingStep {
 
             /**
-             * Adds a single slot.
+             * Sets the default item for the dummy-slots.
              *
-             * @return the single slot step
+             * @param item the default item
+             *
+             * @return the building step
              */
-            SingleStep slot();
-
-            /**
-             * Adds multiple slots.
-             *
-             * @param amount the amount of slots to add
-             *
-             * @return the multiple slots step
-             */
-            MultipleStep slots(int amount);
-
-            // TODO do we need smth. like this? You could do this kind of simple loop yourself very easy
-            default SourceStep slots(int[] indizesFrom, int[] indizesAt) {
-                for (int i = 0; i < indizesFrom.length; i++) {
-                    int fromIndex = indizesFrom[i];
-                    int atIndex = indizesAt[i];
-                    slot().from(fromIndex).at(atIndex);
-                }
-                return this;
-            }
-            SourceStep slots(Vector2i[] positionsFrom, Vector2i[] positionsAt);
-
-            SourceStep slots(int[] indizesFrom, int startingAt);
-            SourceStep slots(Vector2i[] positionsFrom, int startingAt);
-
-            /**
-             * Adds a grid of slots.
-             *
-             * @param sizeX the horizontal size
-             * @param sizeY the vertical size
-             *
-             * @return the grid slots step
-             */
-            GridStep grid(int sizeX, int sizeY);
+            BuildingStep item(ItemStackSnapshot item);
         }
 
-        /**
-         * The single slot step. A single slot can be positioned at an index {@link #at(int)} or x/y position {@link #at(int, int)}.
-         */
-        interface SingleStep extends MultipleStep, GridStep {
-
-            /**
-             * Sets the slot index in the source inventory.
-             * <p>This does nothing for the dummy source</p>
-             *
-             * @param index the slot index
-             *
-             * @return this step
-             */
-            @Override
-            SingleStep from(int index);
-
-            /**
-             * Sets the slot position in the source inventory.
-             * <p>This does nothing for the dummy source</p>
-             *
-             * @param x the slot x position
-             * @param y the slot y position
-             *
-             * @return this step
-             */
-            @Override
-            SingleStep from(int x, int y);
-
-            /**
-             * Sets the slot index in the new inventory.
-             *
-             * @param index the slot index
-             *
-             * @return the source step
-             */
-            @Override
-            SourceStep at(int index);
-
-            /**
-             * Sets the slot position in the new inventory
-             *
-             * @param x the slot x position
-             * @param y the slot y position
-             *
-             * @return the source step
-             */
-            @Override
-            SourceStep at(int x, int y);
-        }
-
-        /**
-         * The multiple slots step. Multiple slots can be positioned at a starting index.
-         */
-        interface MultipleStep extends SourceStep {
-            /**
-             * Sets the starting index in the source inventory.
-             * <p>This does nothing for the dummy source</p>
-             *
-             * @param index the starting index
-             *
-             * @return this step
-             */
-            MultipleStep from(int index);
-
-            /**
-             * Sets the starting index in the new inventory.
-             *
-             * @param index the starting index
-             *
-             * @return the source step
-             */
-            SourceStep at(int index);
-        }
-
-        /**
-         * The grid slots step. A grid of slots can be positioned at a starting x/y position.
-         */
-        interface GridStep extends SourceStep {
-
-            /**
-             * Sets the starting position in the source inventory.
-             * <p>This does nothing for the dummy source</p>
-             *
-             * @param x the starting x position
-             * @param y the starting y position
-             *
-             * @return this step
-             */
-            GridStep from(int x, int y);
-
-            /**
-             * Sets the starting position in the new inventory
-             *
-             * @param x the starting x position
-             * @param y the starting y position
-             *
-             * @return the source step
-             */
-            SourceStep at(int x, int y);
-        }
-
-        /**
-         * The end Step. You can set an identifier and/or carrier for the inventory before building it.
-         */
-        interface EndStep {
+        interface EndStep extends Builder {
 
             /**
              * Sets a unique identifier. Can be retrieved later using. {@link Inventory#getProperty(Property)} with {@link InventoryProperties#UNIQUE_ID}

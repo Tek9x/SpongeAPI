@@ -34,6 +34,7 @@ import org.spongepowered.api.item.inventory.Slot;
  * Represents the index of a {@link Slot}
  * within an {@link Inventory}.
  */
+// TODO maybe replace this with a simple integer
 public final class SlotIndex implements Comparable<SlotIndex> {
 
     /**
