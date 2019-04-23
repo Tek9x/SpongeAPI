@@ -131,8 +131,10 @@ public interface CommandContext {
      * @param parameter the {@link Parameter} associated with the argument
      * @param <T> the expected type of the argument
      * @return the argument
+     * @throws IllegalArgumentException if more than one value for the key was
+     *                                  found
      */
-    default <T> Optional<? extends T> getOne(Parameter.Value<T> parameter) {
+    default <T> Optional<? extends T> getOne(Parameter.Value<T> parameter) throws IllegalArgumentException {
         return getOne(parameter.getKey());
     }
 
@@ -142,8 +144,10 @@ public interface CommandContext {
      * @param key the key to get
      * @param <T> the expected type of the argument
      * @return the argument
+     * @throws IllegalArgumentException if more than one value for the key was
+     *                                  found
      */
-    <T> Optional<? extends T> getOne(Parameter.Key<T> key);
+    <T> Optional<? extends T> getOne(Parameter.Key<T> key) throws IllegalArgumentException;
 
     /**
      * Gets the value for the given key if the key has only one value,
@@ -152,8 +156,11 @@ public interface CommandContext {
      * @param parameter the {@link Parameter} associated with the argument
      * @param <T> the expected type of the argument
      * @return the argument
+     * @throws NoSuchElementException if no value for the key was found
+     * @throws IllegalArgumentException if more than one value for the key was
+     *                                  found
      */
-    default  <T> T requireOne(Parameter.Value<T> parameter) throws NoSuchElementException {
+    default  <T> T requireOne(Parameter.Value<T> parameter) throws NoSuchElementException, IllegalArgumentException {
         return requireOne(parameter.getKey());
     }
 
@@ -164,8 +171,11 @@ public interface CommandContext {
      * @param key the key to get
      * @param <T> the expected type of the argument
      * @return the argument
+     * @throws NoSuchElementException if no value for the key was found
+     * @throws IllegalArgumentException if more than one value for the key was
+     *                                  found
      */
-    <T> T requireOne(Parameter.Key<T> key) throws NoSuchElementException;
+    <T> T requireOne(Parameter.Key<T> key) throws NoSuchElementException, IllegalArgumentException;
 
     /**
      * Gets all values for the given argument. May return an empty list if no#
