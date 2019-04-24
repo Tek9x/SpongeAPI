@@ -134,7 +134,7 @@ public interface CommandContext {
      * @throws IllegalArgumentException if more than one value for the key was
      *                                  found
      */
-    default <T> Optional<? extends T> getOne(Parameter.Value<T> parameter) throws IllegalArgumentException {
+    default <T> Optional<T> getOne(Parameter.Value<T> parameter) throws IllegalArgumentException {
         return getOne(parameter.getKey());
     }
 
@@ -147,7 +147,7 @@ public interface CommandContext {
      * @throws IllegalArgumentException if more than one value for the key was
      *                                  found
      */
-    <T> Optional<? extends T> getOne(Parameter.Key<T> key) throws IllegalArgumentException;
+    <T> Optional<T> getOne(Parameter.Key<T> key) throws IllegalArgumentException;
 
     /**
      * Gets the value for the given key if the key has only one value,

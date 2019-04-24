@@ -26,6 +26,7 @@ package org.spongepowered.api.command;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.exception.CommandException;
+import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.command.parameter.Parameter;
 import org.spongepowered.api.command.parameter.flag.Flags;
 import org.spongepowered.api.command.source.CommandSource;
@@ -35,6 +36,7 @@ import org.spongepowered.api.util.ResettableBuilder;
 import org.spongepowered.api.world.Location;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -154,12 +156,57 @@ public interface Command {
     Text getUsage(Cause cause);
 
     /**
-     * A high level {@link Builder} for creating a {@link Command}.
+     *
+     */
+    interface Parameterized extends Command, CommandExecutor {
+
+        /**
+         * The list of {@link Parameter}s that this {@link Command}
+         * contains.
+         *
+         * <p>This must not return {@code null}, rather, it should return an
+         * empty {@link List}.</p>
+         *
+         * @return A copy of the list of {@link Parameter}s.
+         */
+        List<Parameter> parameters();
+
+        /**
+         * Parses the parameters based on the provided {@link #parameters()}
+         *
+         * @param cause The {@link Cause} of this parse
+         * @param arguments The argument {@link String}
+         * @return The {@link CommandContext}
+         */
+        CommandContext parseArguments(Cause cause, String arguments);
+
+        /**
+         * Processes the command by parsing the arguments, then
+         * executing command based on these arguments.
+         *
+         * <p>By default, this will call {@link #parseArguments(Cause, String)}
+         * and pass the resulting {@link CommandContext} to
+         * {@link #execute(CommandContext)}.</p>
+         *
+         * @param cause The {@link Cause} of the command
+         * @param arguments The raw arguments for this command
+         * @return The result of a command being processed
+         * @throws CommandException Thrown on a command error
+         */
+        default CommandResult process(Cause cause, String arguments) throws CommandException {
+            return execute(parseArguments(cause, arguments));
+        }
+
+    }
+
+    /**
+     * A high level {@link Builder} for creating a
+     * {@link Command.Parameterized}.
      *
      * <p>When creating a command, ensure that a {@link CommandExecutor}
      * <strong>and/or</strong> a child command is specified.</p>
      */
-    interface Builder extends ResettableBuilder<Command, Builder> {
+    interface Builder extends ResettableBuilder<Command.Parameterized, Builder> {
 
         /**
          * Adds a {@link Command} as a top-level child to this command,
@@ -371,7 +418,8 @@ public interface Command {
         Builder setExecutionRequirements(@Nullable Predicate<Cause> executionRequirements);
 
         /**
-         * Builds this command, creating a {@link Command} object.
+         * Builds this command, creating a {@link Command.Parameterized}
+         * object.
          *
          * <p>To build the command, <strong>one</strong> of the following is
          * required:</p>
@@ -390,7 +438,7 @@ public interface Command {
          * @return The command, ready for registration
          * @throws IllegalStateException if the builder is not complete
          */
-        Command build();
+        Command.Parameterized build();
 
     }
 
